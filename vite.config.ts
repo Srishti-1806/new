@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ command }) => ({
   server: {
     host: "::",
     port: 8080,
@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist/spa",
   },
-  plugins: [react(), expressPlugin()],
+  plugins: [react(), command === "serve" ? expressPlugin() : null].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
@@ -23,9 +23,9 @@ export default defineConfig(({ mode }) => ({
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
-    apply: "serve", // Only during dev
+    apply: "serve", // Only apply in dev mode
     configureServer(server) {
-      // Lazy-load to avoid breaking production build
+      // Only load the Express server during dev
       const { createServer } = require("./server");
       const app = createServer();
       server.middlewares.use(app);
