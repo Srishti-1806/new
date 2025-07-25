@@ -3,25 +3,21 @@
   "private": true,
   "type": "module",
   "pkg": {
-    "assets": [
-      "dist/spa/*"
-    ],
-    "scripts": [
-      "dist/server/**/*.js"
-    ]
+    "assets": ["dist/spa/*"],
+    "scripts": ["dist/server/**/*.js"]
   },
-"scripts": {
-  "dev": "vite",
-  "build": "npm run build:client && npm run build:server",
-  "build:client": "vite build",
-  "build:server": "vite build --config vite.config.server.ts",
-  "start": "node dist/server/node-build.mjs",
-  "run": "npm run build && npm run start",
-  "dev:full": "npm run typecheck && npm run format.fix && npm run dev",
-  "test": "vitest --run",
-  "format.fix": "prettier --write .",
-  "typecheck": "tsc"
-},
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build",
+    "build:server": "vite build --config vite.config.server.ts",
+    "start": "node dist/server/node-build.mjs",
+    "run": "npm run build && npm run start",
+    "dev:full": "npm run typecheck && npm run format.fix && npm run dev",
+    "test": "vitest --run",
+    "format.fix": "prettier --write .",
+    "typecheck": "tsc"
+  },
   "dependencies": {
     "@huggingface/inference": "^4.5.3",
     "@react-three/drei": "^10.1.2",
@@ -96,6 +92,10 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.53.0"
+    "react-hook-form": "^7.53.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.8",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.2.0"
   }
 }
