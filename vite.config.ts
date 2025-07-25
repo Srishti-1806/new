@@ -1,17 +1,21 @@
+// vite.config.ts
 import { defineConfig, Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
   server: {
     host: "::",
     port: 8080,
   },
   build: {
-    outDir: "dist/spa",
+    outDir: "dist/spa",  // ✅ Required so Express can serve it
+    emptyOutDir: true,   // ✅ Clean output folder before build
   },
-  plugins: [react(), command === "serve" ? expressPlugin() : null].filter(Boolean),
+  plugins: [
+    react(),
+    command === "serve" ? expressPlugin() : null, // ✅ for dev only
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
@@ -19,27 +23,11 @@ export default defineConfig(({ command }) => ({
     },
   },
 }));
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import path from "path";
-
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    outDir: "dist/spa", // important!
-    emptyOutDir: true,
-  },
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./client"), // adjust if needed
-    },
-  },
-});
 
 function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
-    apply: "serve", // Only apply in dev mode
+    apply: "serve",
     configureServer(server) {
       const { createServer } = require("./server");
       const app = createServer();
