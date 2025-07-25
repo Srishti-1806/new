@@ -1,37 +1,32 @@
-// vite.config.ts
-import { defineConfig, Plugin } from "vite";
-import react from "@vitejs/plugin-react-swc";
+// server/node-build.ts
+import express from "express";
+import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 
-export default defineConfig(({ command }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
-  build: {
-    outDir: "dist/spa",  // ✅ Required so Express can serve it
-    emptyOutDir: true,   // ✅ Clean output folder before build
-  },
-  plugins: [
-    react(),
-    command === "serve" ? expressPlugin() : null, // ✅ for dev only
-  ].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./client"),
-      "@shared": path.resolve(__dirname, "./shared"),
-    },
-  },
-}));
+const app = express();
+app.use(cors());
 
-function expressPlugin(): Plugin {
-  return {
-    name: "express-plugin",
-    apply: "serve",
-    configureServer(server) {
-      const { createServer } = require("./server");
-      const app = createServer();
-      server.middlewares.use(app);
-    },
-  };
-}
+// Simulate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve frontend static files
+const spaPath = path.resolve(__dirname, "../spa");
+app.use(express.static(spaPath));
+
+// API route
+app.get("/api/hello", (_, res) => {
+  res.json({ message: "Hello from server!" });
+});
+
+// Catch-all fallback to SPA
+app.get("*", (_, res) => {
+  res.sendFile(path.join(spaPath, "index.html"));
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});
