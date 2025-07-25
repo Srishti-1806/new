@@ -1,19 +1,7 @@
 // vite.config.ts
-import { defineConfig, Plugin } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-
-function expressPlugin(): Plugin {
-  return {
-    name: "express-plugin",
-    apply: "serve",
-    async configureServer(server) {
-      const mod = await import("./server/dev-server.js"); // .js even if file is .ts when built
-      const app = mod.createServer();
-      server.middlewares.use(app);
-    },
-  };
-}
 
 export default defineConfig(({ command }) => ({
   server: {
@@ -24,7 +12,7 @@ export default defineConfig(({ command }) => ({
     outDir: "dist/spa",
     emptyOutDir: true,
   },
-  plugins: [react(), command === "serve" ? expressPlugin() : null].filter(Boolean),
+  plugins: [react()], // removed expressPlugin()
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./client"),
