@@ -25,7 +25,6 @@ function expressPlugin(): Plugin {
     name: "express-plugin",
     apply: "serve", // Only apply in dev mode
     configureServer(server) {
-      // Only load the Express server during dev
       const { createServer } = require("./server");
       const app = createServer();
       server.middlewares.use(app);
