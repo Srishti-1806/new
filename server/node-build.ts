@@ -1,23 +1,32 @@
+// server/node-build.ts
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
-export function createServer() {
-  const app = express();
-  app.use(cors());
-  app.use(express.json());
+const app = express();
+app.use(cors());
 
-  app.get("/api/hello", (_req, res) => {
-    res.json({ message: "Hello from Express!" });
-  });
+// Enable __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  return app;
-}
+// Serve static frontend from dist/spa (adjust if your client build is elsewhere)
+const spaPath = path.resolve(__dirname, "../spa");
+app.use(express.static(spaPath));
 
-// Run server only in production
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const app = createServer();
-  const PORT = process.env.PORT || 8080;
-  app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}`);
-  });
-}
+// Example API route
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Hello from backend!" });
+});
+
+// SPA fallback: serve index.html for all non-API routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(spaPath, "index.html"));
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server listening on http://localhost:${PORT}`);
+});
