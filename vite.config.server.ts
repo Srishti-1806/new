@@ -1,7 +1,7 @@
+// vite.config.server.ts
 import { defineConfig } from "vite";
 import path from "path";
 
-// Server build configuration
 export default defineConfig({
   build: {
     lib: {
@@ -15,7 +15,6 @@ export default defineConfig({
     ssr: true,
     rollupOptions: {
       external: [
-        // Node.js built-ins
         "fs",
         "path",
         "url",
@@ -29,7 +28,6 @@ export default defineConfig({
         "buffer",
         "querystring",
         "child_process",
-        // External dependencies that should not be bundled
         "express",
         "cors",
       ],
@@ -38,7 +36,7 @@ export default defineConfig({
         entryFileNames: "[name].mjs",
       },
     },
-    minify: false, // Keep readable for debugging
+    minify: false,
     sourcemap: true,
   },
   resolve: {
