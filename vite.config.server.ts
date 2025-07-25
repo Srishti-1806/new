@@ -1,4 +1,3 @@
-// vite.config.server.ts
 import { defineConfig } from "vite";
 import path from "path";
 
@@ -7,7 +6,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "server/node-build.ts"),
       name: "server",
-      fileName: "production",
+      fileName: "node-build",
       formats: ["es"],
     },
     outDir: "dist/server",
@@ -15,21 +14,12 @@ export default defineConfig({
     ssr: true,
     rollupOptions: {
       external: [
-        "fs",
-        "path",
-        "url",
-        "http",
-        "https",
-        "os",
-        "crypto",
-        "stream",
-        "util",
-        "events",
-        "buffer",
-        "querystring",
-        "child_process",
-        "express",
-        "cors",
+        // Node.js built-ins
+        "fs", "path", "url", "http", "https", "os", "crypto",
+        "stream", "util", "events", "buffer", "querystring", "child_process",
+
+        // External dependencies
+        "express", "cors"
       ],
       output: {
         format: "es",
