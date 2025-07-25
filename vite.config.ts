@@ -7,9 +7,9 @@ function expressPlugin(): Plugin {
   return {
     name: "express-plugin",
     apply: "serve",
-    configureServer(server) {
-      const { createServer } = require("./server/dev-server");
-      const app = createServer();
+    async configureServer(server) {
+      const mod = await import("./server/dev-server.js"); // .js even if file is .ts when built
+      const app = mod.createServer();
       server.middlewares.use(app);
     },
   };
